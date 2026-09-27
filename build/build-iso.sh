@@ -22,6 +22,7 @@ lb config \
 
 cp -a "${ROOT}/config/package-lists/." config/package-lists/
 cp -a "${ROOT}/config/includes.chroot/." config/includes.chroot/
+chmod +x config/includes.chroot/usr/local/bin/neox
 
 echo "[NEOX] Building ISO..."
 lb build
