@@ -9,3 +9,7 @@ fi
 
 alias ll='ls -lah'
 alias cls='clear'
+
+if [ "$(tty 2>/dev/null)" = "/dev/tty1" ] && [ "$(id -u)" = "0" ]; then
+  exec /usr/local/bin/neox
+fi
