@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -e
+
+VERSION="${NEOX_VERSION:-0.1.0}"
+
+while true; do
+  printf '\n\033[1;36mNEOX\033[0m> '
+  read -r cmd args || exit 0
+
+  case "${cmd}" in
+    "") ;;
+    help)
+      cat <<'EOF'
+NEOX commands:
+  help       Show this help
+  version    Show NEOX version
+  status     Show basic system status
+  hardware   Show CPU/memory/kernel information
+  apps       Show installed NEOX lab commands
+  clear      Clear the terminal
+  exit       Leave the NEOX shell
+EOF
+      ;;
+    version)
+      echo "NEOX OS ${VERSION} — VM LAB Experimental"
+      ;;
+    status)
+      echo "OS:      NEOX"
+      echo "Edition: VM LAB Experimental"
+      echo "Kernel:  $(uname -r)"
+      echo "Arch:    $(uname -m)"
+      echo "Uptime:  $(uptime -p 2>/dev/null || true)"
+      ;;
+    hardware)
+      echo "CPU:"
+      grep -m1 'model name' /proc/cpuinfo 2>/dev/null || true
+      echo "Memory:"
+      free -h 2>/dev/null || true
+      echo "Kernel: $(uname -a)"
+      ;;
+    apps)
+      echo "neox — NEOX command interface"
+      echo "nano — text editor"
+      echo "less — pager"
+      echo "bash — shell"
+      ;;
+    clear|cls)
+      clear
+      ;;
+    exit|quit)
+      exit 0
+      ;;
+    *)
+      echo "NEOX: unknown command: ${cmd}"
+      echo "Type 'help' for commands."
+      ;;
+  esac
+done
