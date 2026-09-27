@@ -9,19 +9,40 @@ rm -rf "${BUILD_DIR}" "${OUTPUT_DIR}"
 mkdir -p "${BUILD_DIR}" "${OUTPUT_DIR}"
 cd "${BUILD_DIR}"
 
-echo "[NEOX] Configuring live-build..."
+DEBIAN_MIRROR="https://deb.debian.org/debian/"
+DEBIAN_SECURITY_MIRROR="https://security.debian.org/debian-security/"
+
+echo "[NEOX] Configuring live-build in Debian mode..."
 lb config \
+  --mode debian \
   --distribution bookworm \
   --architectures amd64 \
   --binary-images iso-hybrid \
   --archive-areas "main" \
-  --mirror-bootstrap "http://deb.debian.org/debian/" \
-  --mirror-binary "http://deb.debian.org/debian/" \
-  --mirror-chroot "http://deb.debian.org/debian/" \
+  --mirror-bootstrap "${DEBIAN_MIRROR}" \
+  --mirror-binary "${DEBIAN_MIRROR}" \
+  --mirror-binary-security "${DEBIAN_SECURITY_MIRROR}" \
+  --mirror-chroot "${DEBIAN_MIRROR}" \
+  --mirror-chroot-security "${DEBIAN_SECURITY_MIRROR}" \
+  --mirror-debian-installer "${DEBIAN_MIRROR}" \
+  --parent-mirror-bootstrap "${DEBIAN_MIRROR}" \
+  --parent-mirror-binary "${DEBIAN_MIRROR}" \
+  --parent-mirror-binary-security "${DEBIAN_SECURITY_MIRROR}" \
+  --parent-mirror-chroot "${DEBIAN_MIRROR}" \
+  --parent-mirror-chroot-security "${DEBIAN_SECURITY_MIRROR}" \
+  --parent-mirror-debian-installer "${DEBIAN_MIRROR}" \
+  --updates true \
   --apt-indices false \
   --apt-recommends true \
   --bootappend-live "boot=live components quiet splash" \
   --debian-installer false
+
+echo "[NEOX] Checking generated repository configuration..."
+if grep -RqsE 'archive\.ubuntu\.com|security\.ubuntu\.com' config; then
+  echo "[NEOX] ERROR: Ubuntu repository detected in live-build configuration."
+  grep -RInE 'archive\.ubuntu\.com|security\.ubuntu\.com' config || true
+  exit 1
+fi
 
 cp -a "${ROOT}/config/package-lists/." config/package-lists/
 cp -a "${ROOT}/config/includes.chroot/." config/includes.chroot/
