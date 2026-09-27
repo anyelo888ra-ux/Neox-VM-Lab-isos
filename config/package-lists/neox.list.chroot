@@ -1,0 +1,13 @@
+linux-image-amd64
+systemd-sysv
+live-boot
+bash
+coreutils
+util-linux
+procps
+iproute2
+iputils-ping
+nano
+less
+sudo
+ca-certificates
