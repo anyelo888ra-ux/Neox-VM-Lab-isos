@@ -31,7 +31,6 @@ lb config \
   --parent-mirror-chroot "${DEBIAN_MIRROR}" \
   --parent-mirror-chroot-security "${DEBIAN_SECURITY_MIRROR}" \
   --parent-mirror-debian-installer "${DEBIAN_MIRROR}" \
-  --updates true \
   --apt-indices false \
   --apt-recommends true \
   --bootappend-live "boot=live components quiet splash" \
