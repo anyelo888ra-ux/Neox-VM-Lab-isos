@@ -15,6 +15,9 @@ lb config \
   --architectures amd64 \
   --binary-images iso-hybrid \
   --archive-areas "main" \
+  --mirror-bootstrap "http://deb.debian.org/debian/" \
+  --mirror-binary "http://deb.debian.org/debian/" \
+  --mirror-chroot "http://deb.debian.org/debian/" \
   --apt-indices false \
   --apt-recommends true \
   --bootappend-live "boot=live components quiet splash" \
