@@ -1,0 +1,46 @@
+name: Build NEOX ISO
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-iso:
+    name: Build NEOX 0.1 ISO
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install live-build
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y live-build
+
+      - name: Build ISO
+        run: |
+          chmod +x build/build-iso.sh
+          sudo ./build/build-iso.sh
+          sudo chown -R "$USER:$USER" dist
+
+      - name: Verify ISO
+        run: |
+          test -s dist/neox-v0.1.0-amd64.iso
+          test -s dist/neox-v0.1.0-amd64.iso.sha256
+          sha256sum -c dist/neox-v0.1.0-amd64.iso.sha256
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: neox-v0.1.0-amd64
+          path: |
+            dist/neox-v0.1.0-amd64.iso
+            dist/neox-v0.1.0-amd64.iso.sha256
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
